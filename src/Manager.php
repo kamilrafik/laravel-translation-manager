@@ -296,6 +296,7 @@ class Manager
 
                         $path = $path.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$group.'.php';
 
+                        $this->prepareForExport($translations);
                         $output = "<?php\n\nreturn ".$this->varExport($translations).';'.\PHP_EOL;
                         $this->files->put($path, $output);
                     }
@@ -353,6 +354,18 @@ class Manager
         }
 
         return $array;
+    }
+
+    protected function prepareForExport(&$translations)
+    {
+        foreach ($translations as $k => &$v) {
+            if (is_array($v)) {
+                $this->prepareForExport($v);
+            } elseif ($v === '') {
+                $v = null;
+            }
+        }
+        unset($v);
     }
 
     protected function varExport($translations)
