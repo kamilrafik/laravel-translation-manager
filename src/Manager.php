@@ -326,7 +326,7 @@ class Manager
 
     public function exportAllTranslations()
     {
-        $groups = Translation::whereNotNull('value')->selectDistinctGroup()->get('group');
+        $groups = Translation::selectDistinctGroup()->get('group');
 
         foreach ($groups as $group) {
             if ($group->group == self::JSON_GROUP) {
