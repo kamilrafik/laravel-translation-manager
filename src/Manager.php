@@ -296,7 +296,7 @@ class Manager
 
                         $path = $path.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$group.'.php';
 
-                        $output = "<?php\n\nreturn ".var_export($translations, true).';'.\PHP_EOL;
+                        $output = "<?php\n\nreturn ".$this->varExport($translations).';'.\PHP_EOL;
                         $this->files->put($path, $output);
                     }
                 }
@@ -353,6 +353,37 @@ class Manager
         }
 
         return $array;
+    }
+
+    protected function varExport($translations)
+    {
+        $string = var_export($translations, true);
+
+        $string = preg_replace(
+            '/^([ ]*)(.*)/m',
+            '$1$1$2',
+            $string
+        );
+
+        $arr = preg_split('/\r\n|\n|\r/', $string);
+
+        $arr = preg_replace(
+            [
+                '/\s*array\s\($/',
+                '/\)(,)?$/',
+                '/\s=>\s$/',
+            ],
+            [
+                null,
+                ']$1',
+                ' => [',
+            ],
+            $arr
+        );
+
+        $arr = array_filter(['['] + $arr);
+
+        return implode(PHP_EOL, $arr);
     }
 
     public function jsonSet(&$array, $key, $value)
