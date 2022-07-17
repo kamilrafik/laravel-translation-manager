@@ -23,9 +23,13 @@ class Translation extends Model{
     protected $table = 'ltm_translations';
     protected $guarded = array('id', 'created_at', 'updated_at');
 
-    public function scopeOfTranslatedGroup($query, $group)
+    public function scopeOfTranslatedGroup($query, $group, $notNull = true)
     {
-        return $query->where('group', $group)->whereNotNull('value');
+        $query = $query->where('group', $group);
+        if ($notNull) {
+            $query->whereNotNull('value');
+        }
+        return $query;
     }
 
     public function scopeOrderByGroupKeys($query, $ordered) {

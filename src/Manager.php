@@ -266,7 +266,7 @@ class Manager
                     }
                 }
 
-                $tree = $this->makeTree(Translation::ofTranslatedGroup($group)
+                $tree = $this->makeTree(Translation::ofTranslatedGroup($group, false)
                                                     ->orderByGroupKeys(Arr::get($this->config, 'sort_keys', false))
                                                     ->get());
 
